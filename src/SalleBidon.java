@@ -10,10 +10,6 @@
  */
 public class SalleBidon extends SalleDedans
 {
-    /*
-    * Déclaration des attributs d'une salle et accesseurs.
-    */
-
     /**
      * Création d'une salle qui contient un bidon.
      * Elle doit s'affecter un nouveau bidon plein.
@@ -21,9 +17,10 @@ public class SalleBidon extends SalleDedans
      * @param col Numéro de la colonne dans le plateau
      * @param p Le plateau qui contient la salle
      */
-    public SalleBidon(/*…*/)
+    public SalleBidon(int lig, int col, Plateau p)
     {
-        /* Code à spécifier */
+        super(lig, col, p);
+        this.bidon = new Bidon(); // Crée un nouveau bidon plein
     }
 
     /**
@@ -33,7 +30,11 @@ public class SalleBidon extends SalleDedans
     @Override
     public String toString()
     {
-        return null; /* À remplacer par le code effectif */
+        if (occupant != null) {
+            return bidon.toString() + occupant.toString();
+        } else {
+            return bidon.toString() + ".";
+        }
     }
 
     /**
@@ -43,7 +44,15 @@ public class SalleBidon extends SalleDedans
     @Override
     public void entre(Personnage p)
     {
-        /* Code à spécifier */
+        // Si la salle est occupée, on gère l'interaction comme une SalleDedans normale
+        if (estOccupee()) {
+            super.entre(p);
+        } else {
+            // La salle est libre, le personnage entre
+            p.migre(this);
+            
+            // Le personnage interagit avec le bidon
+            p.interagit(bidon);
+        }
     }
-
 }

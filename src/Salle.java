@@ -16,18 +16,26 @@ public abstract class Salle {
   /*
    * Déclaration des attributs d'une salle et accesseurs.
    */
-  private int col, lig;
+  private int colonne, ligne;
   private Plateau plateau;
 
-  public void setCol(int col) {
-    if (col >= 0) {
-      this.col = col;
+  public int getColonne() {
+    return colonne;
+  }
+  
+  public void setColonne(int colonne) {
+    if (colonne >= 0) {
+      this.colonne = colonne;
     }
   }
 
-  public void setLig(int lig) {
-    if (lig >= 0) {
-      this.lig = lig;
+  public int getLigne() {
+    return ligne;
+  }
+  
+  public void setLigne(int ligne) {
+    if (ligne >= 0) {
+      this.ligne = ligne;
     }
   }
 
@@ -39,9 +47,9 @@ public abstract class Salle {
     this.plateau = p;
   }
 
-  public Salle(int lig, int col, Plateau p) {
-    this.setLig(lig);
-    this.setCol(col);
+  public Salle(int ligne, int colonne, Plateau p) {
+    this.setLigne(ligne);
+    this.setColonne(colonne);
     this.setPlateau(p);
   }
 

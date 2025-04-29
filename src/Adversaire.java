@@ -27,7 +27,7 @@ public abstract class Adversaire extends Personnage {
     }
 
     protected Direction directionFuiteJoueur() {
-        return directionVersJoueur().inverse();
+        return directionVersJoueur().getInverse();
     }
    
 }

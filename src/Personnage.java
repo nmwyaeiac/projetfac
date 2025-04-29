@@ -1,4 +1,3 @@
-import java.util.Random;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -17,7 +16,7 @@ public abstract class Personnage {
    * Déclaration des attributs communs à tous les personnages et accesseurs.
    */
   protected int inertie;
-  protected SalleDedans position;
+  protected SalleDedans salle;
   protected ReserveLimitee reserve;
 
   /**
@@ -28,42 +27,38 @@ public abstract class Personnage {
    * @return un entier positif ou nul
    */
   public int getEnergie() {
-    return this.getReserve().getContenu();
+    return this.reserve.getEnergie();
   }
 
   public int getInertie() {
     return this.inertie;
   }
 
-  public void setEnergie(int energie) {
-    if (energie > 0)
-      this.getReserve().SetContenu(energie);
-    else
-      throw new IllegalArgumentException("impossible d'assigner une valeur inferieur a 0 ");
+  public SalleDedans getSalle() {
+    return this.salle;
   }
 
-  public void setInertie(int inertie) {
-    this.inertie = inertie;
-  }
-
-  private ReserveLimitee getReserve() {
-    return this.reserve;
-  }
-
-  private void setReserve(ReserveLimitee reserve) {
-    this.reserve = reserve;
+  public void setSalle(SalleDedans salle) {
+    this.salle = salle;
   }
 
   /**
    * Diminue l'énergie du personnage d'une unité (exécuté à chaque changement de
    * salle effectif)
    */
-  public void decEnergie() {
-    this.getReserve().modifEnergie(-1);
+  public void perdreEnergie(int quantite) {
+    this.reserve.puiser(quantite);
   }
 
   /**
-   * Restitue la force du personnage (sont inertie fois son énergie).
+   * Augmente l'énergie du personnage
+   */
+  public void recevoirEnergie(int quantite) {
+    this.reserve.stocker(quantite);
+  }
+
+  /**
+   * Restitue la force du personnage (son inertie fois son énergie).
    * 
    * @return un entier positif ou nul
    */
@@ -77,7 +72,7 @@ public abstract class Personnage {
    * @return
    */
   public boolean estNeutralise() {
-    return this.getReserve().estVide();
+    return this.getEnergie() <= 0;
   }
 
   /**
@@ -87,13 +82,33 @@ public abstract class Personnage {
    * affecter la salle de destination au personnage et à faire décroître son
    * énergie
    * 
-   * @param destination`
+   * @param destination
    */
   public void migre(SalleDedans destination) {
+    // Libérer la salle d'origine
+    if (this.salle != null) {
+      this.salle.setOccupant(null);
+    }
+    
+    // Affecter la nouvelle salle au personnage
+    this.setSalle(destination);
+    
+    // Affecter le personnage à la nouvelle salle
+    destination.setOccupant(this);
+    
+    // Faire décroître l'énergie
+    this.perdreEnergie(1);
   }
 
-  public void avance() {
-  }
+  /**
+   * Déplacement du personnage
+   */
+  public abstract void deplacer();
+
+  /**
+   * Interaction avec un réservoir (bidon ou collecteur)
+   */
+  public abstract void interagit(Reservoir r);
 
   /**
    * Action d'un personnage pour prendre de l'énergie à un autre personnage.
@@ -103,41 +118,34 @@ public abstract class Personnage {
    */
   public void prendEnergie(Personnage autre) {
     if (!autre.estNeutralise()) {
-      this.prendEnergie(autre.getReserve());
+      int energiePrise = autre.getEnergie();
+      autre.perdreEnergie(energiePrise);
+      this.recevoirEnergie(energiePrise);
+      System.out.println(this + " prend " + energiePrise + " unités d'énergie à " + autre);
     }
   }
 
   /**
-   * Action d'un personnage pour prendre de l'énergie dans une réserve limitée.
-   * Le code dépend du type de personnage (Adversaire ou Joueur).
-   * 
-   * @param r La réserve d'énergie limitée (bidon ou réserve d'énergie du
-   *          personnage)
-   */
-  public abstract void prendEnergie(ReserveLimitee r);
-
-  /**
    * Action à effectuer après la perte d'un combat.
-   * Le code dépend du type de Personnage.
    */
-  public abstract void perd();
-
-  /**
-   *
-   * @param p
-   */
-  public void rencontre(Personnage p) {
+  public void perd() {
+    System.out.println(this + " a perdu le combat.");
+    if (this.estNeutralise()) {
+      System.out.println(this + " a été neutralisé !");
+      // Si dans une salle, on libère la salle de manière sécurisée
+      if (this.salle != null) {
+        SalleDedans salleTemp = this.salle;
+        this.salle = null; // Détacher d'abord le personnage de la salle
+        salleTemp.setOccupant(null); // Puis détacher la salle du personnage
+      }
+    }
   }
 
   /**
    * Action de combat entre deux personnages.
-   * En fait, ce sont un Joueur et un Adversaire, mais il n'est pas besoin de le
-   * spécifier.
    * Le gagnant est celui qui a la plus grande force. Il prend de l'énergie au
    * perdant (utilisation de prendEnergie(Personnage autre)) et la méthode perd()
    * est lancée pour le perdant
-   * Le code ne dépend pas de qui est le joueur et qui est l'adversaire parce
-   * c'est prendEnergie(…) et perd(…) qui seront différent suivant qui l'exécute.
    * 
    * @param p1 un Personnage
    * @param p2 un autre Personnage
@@ -147,21 +155,21 @@ public abstract class Personnage {
     int force2 = p2.getForce();
 
     System.out.println("Combat !");
-    System.out.println("Force du premier personnage : " + force1);
-    System.out.println("Force du second personnage : " + force2);
+    System.out.println("Force de " + p1 + " : " + force1);
+    System.out.println("Force de " + p2 + " : " + force2);
 
     if (force1 != force2) {
       if (force1 > force2) {
-        System.out.println("Le premier personnage gagne !");
+        System.out.println(p1 + " gagne !");
         p1.prendEnergie(p2);
         p2.perd();
       } else {
-        System.out.println("Le second personnage gagne !");
+        System.out.println(p2 + " gagne !");
         p2.prendEnergie(p1);
         p1.perd();
       }
     } else {
-      System.out.println("Égalité , pas de gagnant !");
+      System.out.println("Égalité, pas de gagnant !");
     }
   }
 
@@ -169,8 +177,8 @@ public abstract class Personnage {
    * Initialise l'inertie, la réserve d'énergie et la position du personnage
    */
   public Personnage(int inertie) {
-    this.setInertie(inertie);
-    this.setReserve(new ReserveLimitee());
+    this.inertie = inertie;
+    this.reserve = new ReserveLimitee();
+    this.salle = null;
   }
-
 }
