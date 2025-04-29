@@ -10,22 +10,22 @@
  */
 public class ReserveLimitee extends Reservoir
 {
-    /*
-    * Déclaration des attributs d'une réserve limitee et accesseurs.
-    */
-    public ReserveLimitee(/*…*/)
-    {
-        /* Code à spécifier */
+    public ReserveLimitee() {
+        super(ParametresJeu.MAX_ENERGIE);
     }
-    /**
-     * Ajustement du montant positif que l'on veut ajouter à une réserve d'énergie.
-     * Il ne faut pas dépasser le maximum d'énergie possible
-     * @param montant La quantité d'énergie à ajouter à la réserve
-     * @return La part du montant qu'il est possible d'ajouter à la réserve
-     */
+
     @Override
-    public int ajustementAjout(int montant)
-    {
-        return 0; /* À remplacer par le code effectif */
-    }  
+    public int puiser(int quantite) {
+        int prelevement = Math.min(quantite, this.energie);
+        this.energie -= prelevement;
+        return prelevement;
+    }
+
+    @Override
+    public int stocker(int quantite) {
+        int espace = ParametresJeu.MAX_ENERGIE - this.energie;
+        int ajoute = Math.min(quantite, espace);
+        this.energie += ajoute;
+        return ajoute;
+    }
 }

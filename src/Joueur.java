@@ -9,68 +9,47 @@
  * Il doit pouvoir accéder au collecteur
  * @author jo
  */
-public class Joueur extends Personnage
-{
-    /*
-    * Déclaration des attributs spécifiques à Joueur et accesseurs (Ceux qui ne sont pas déjà déclarés dans Personnage)
-    */
-    
-    /**
-     * Action à effectuer quand un joueur (le joueur) rencontre un autre personnage.
-     * p peut uniquement être un adversaire dans cette version du jeu, mais la possibilité est ouverte pour une autre version du jeu où un joueur rencontre un autre joueur ou, pourquoi pas, d'autres types de personnages.
-     * Si p est un autre adversaire (Ce sera toujours le cas), il y a combat.
-     * @param p Un personnage quelconque (En fait, un adversaire).
-     */
-     @Override
-    public void rencontre(Personnage p)
-    {
-        /* Code à spécifier */
-    }
-    
-    /**
-     * Action à effectuer après la perte d'un combat contre un adversaire.
-     * Si le joueur est neutralisé, il a perdu. Le jeu est terminé.
-     */
-    @Override
-    public void perd()
-    {
-        /* Code à spécifier */
-    }
-    
-    /**
-     * Avancée du joueur dans une direction demandée à l'utilisateur humain.
-     * L'avancée induit l'exécution de la méthode entre(…) dans la salle de destination.
-     */
-    @Override
-    public void avance()
-    {
-        /* Code à spécifier */
+public class Joueur extends Personnage {
+    private Collecteur collecteur;
+
+    public Joueur(int ligne, int colonne, Plateau plateau, Collecteur collecteur) {
+        super(8); // inertie fixée à 5
+        this.collecteur = collecteur;
+        this.salle = plateau.getSalle(ligne, colonne);
     }
 
-    /**
-     * Action spécifique au joueur pour prendre de l'énergie dans une réserve limitée.
-     * La quantité à prendre est demandée à l'utilisateur, puis ajustée aux possibilités de la réserve.
-     * L'utilsateur choisit ensuite s'il reconstitue sa propre énergie ou s'il ajoute l'énergie prise au collecteur.
-     * 
-     * @param r La réserve d'énergie limitée (bidon ou réserve d'énergie d'un adversaire)
-     */
     @Override
-    public void prendEnergie(ReserveLimitee r)
-    {
-        /* Code à spécifier */
+  
+public void deplacer() {
+    for (int i = 0; i < 2; i++) {
+        if (estNeutralise()) return;
 
-    }
-    public Joueur(/*…*/)
-    {
-        /* Code à spécifier */
-    }
-    
-        /**
-     * Restitue le symbole du joueur.
-     * Utile pour afficher l'état du plateau.
-     * @return une chaîne de caractère qui contient le symbole du joueur (Par exemple ♜)
-     */
-    @Override
-    public String toString(){return "Le symbole du joueur";}    
+        Direction d = Direction.demanderDirection();
+        Salle nouvelleSalle = salle.getPlateau().getSalle(
+            salle.getLigne() + d.getDLig(),
+            salle.getColonne() + d.getDCol()
+        );
 
+        if (nouvelleSalle != null && !(nouvelleSalle instanceof SalleBord)) {
+            perdreEnergie(1);
+            nouvelleSalle.entrer(this);
+            // ➕ Ajout de l'affichage du plateau après chaque déplacement
+            salle.getPlateau().afficherPlateau();
+        } else {
+            System.out.println("Déplacement impossible.");
+        }
+    }
 }
+
+
+    @Override
+    public void interagit(Reservoir r) {
+        if (r instanceof Bidon) {
+            System.out.println("Énergie du bidon : " + r.getEnergie());
+            int choix = Direction.demanderQuantite(r.getEnergie());
+            recevoirEnergie(r.puiser(choix));
+        } else if (r instanceof Collecteur) {
+            int choix = Direction.demanderQuantite(this.getEnergie());
+            r.stocker(this.reserve.puiser(choix));
+        }
+
