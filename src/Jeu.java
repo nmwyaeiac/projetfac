@@ -31,62 +31,65 @@
      /**
       * Démarre et gère une partie de jeu
       */
-     public void joue() {
-         int tours = 0;
-         Scanner scanner = new Scanner(System.in);
- 
-         System.out.println("=== DÉBUT DU JEU ===");
- 
- 
-         while (!joueur.estNeutralise() && adversaires.stream().anyMatch(a -> !a.estNeutralise())) {
-             System.out.println("\n--- Tour " + (++tours) + " ---");
-             
-             // 1. Déplacement du joueur (deux déplacements)
-             System.out.println("C'est votre tour de jouer!");
-            
-             if (joueur.estNeutralise()) {
-                 break; // Le joueur a été neutralisé pendant son déplacement
-             }
- 
-             // 2. Déplacement des adversaires (un déplacement chacun)
-             if (!joueur.estNeutralise()) {
-                 System.out.println("\nTour des adversaires...");
-                 for (Adversaire a : adversaires) {
-                     if (!a.estNeutralise()) {
-                         a.deplacer();
-                         
-                         // Si le joueur est neutralisé après ce déplacement, on arrête immédiatement
-                         if (joueur.estNeutralise()) {
-                             System.out.println("Le joueur a été neutralisé!");
-                             break;
-                         }
-                     }
-                 }
-                 
-               
-             }
-             
-             // 3. Tous les 5 tours, on propose au joueur d'arrêter
-             if (tours % 5 == 0) {
-                 System.out.println("\nSouhaitez-vous arrêter la partie ? (o/n)");
-                 String rep = scanner.nextLine().trim().toLowerCase();
-                 if (rep.equals("o")) {
-                     break;
-                 }
-             }
-         }
- 
-         // Affichage des résultats de fin de partie
-         System.out.println("\n=== FIN DE LA PARTIE ===");
-         
-         if (joueur.estNeutralise()) {
-             afficherResultatsFinaux("Vous avez été neutralisé ! Défaite...");
-         } else if (adversaires.stream().noneMatch(a -> !a.estNeutralise())) {
-             afficherResultatsFinaux("Tous les adversaires ont été neutralisés ! Victoire !");
-         } else {
-             afficherResultatsFinaux("Partie arrêtée manuellement.");
-         }
-     }
+    /**
+ * Démarre et gère une partie de jeu
+ */
+public void joue() {
+    int tours = 0;
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.println("=== DÉBUT DU JEU ===");
+    plateau.afficherPlateau(); // Afficher le plateau au début
+
+    while (!joueur.estNeutralise() && adversaires.stream().anyMatch(a -> !a.estNeutralise())) {
+        System.out.println("\n--- Tour " + (++tours) + " ---");
+        
+        // 1. Déplacement du joueur (deux déplacements)
+        System.out.println("C'est votre tour de jouer!");
+        joueur.deplacer(); // Assurez-vous que cette méthode est appelée
+        
+        if (joueur.estNeutralise()) {
+            break; // Le joueur a été neutralisé pendant son déplacement
+        }
+
+        // 2. Déplacement des adversaires (un déplacement chacun)
+        System.out.println("\nTour des adversaires...");
+        for (Adversaire a : adversaires) {
+            if (!a.estNeutralise()) {
+                a.deplacer();
+                
+                // Si le joueur est neutralisé après ce déplacement, on arrête immédiatement
+                if (joueur.estNeutralise()) {
+                    System.out.println("Le joueur a été neutralisé!");
+                    break;
+                }
+            }
+        }
+        
+        // Afficher le plateau après tous les déplacements
+        plateau.afficherPlateau();
+        
+        // 3. Tous les 5 tours, on propose au joueur d'arrêter
+        if (tours % 5 == 0) {
+            System.out.println("\nSouhaitez-vous arrêter la partie ? (o/n)");
+            String rep = scanner.nextLine().trim().toLowerCase();
+            if (rep.equals("o")) {
+                break;
+            }
+        }
+    }
+
+    // Affichage des résultats de fin de partie
+    System.out.println("\n=== FIN DE LA PARTIE ===");
+    
+    if (joueur.estNeutralise()) {
+        afficherResultatsFinaux("Vous avez été neutralisé ! Défaite...");
+    } else if (adversaires.stream().noneMatch(a -> !a.estNeutralise())) {
+        afficherResultatsFinaux("Tous les adversaires ont été neutralisés ! Victoire !");
+    } else {
+        afficherResultatsFinaux("Partie arrêtée manuellement.");
+    }
+}
  
      /**
       * Affiche les résultats finaux de la partie

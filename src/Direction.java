@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Direction {
   public static final Direction DROITE = new Direction("l");
   public static final Direction GAUCHE = new Direction("h");
@@ -41,15 +43,17 @@ public class Direction {
       rang = 7 - rang + 1;
     return rang;
   }
-
   public static Direction getDirectionQuelconque() {
-    Direction d;
-    do {
-      d = new Direction(Lire.S("Entrez une direction avec 'h','j','k','l' ou combinaison (ex: 'kh' pour haut gauche)"));
-    } while (!d.isValide());
-    return d;
-  }
-
+    try (Scanner scanner = new Scanner(System.in)) {
+      Direction d;
+      do {
+          System.out.print("Entrez une direction avec 'h','j','k','l' ou combinaison (ex: 'kh' pour haut gauche) : ");
+          String input = scanner.nextLine().trim();
+          d = new Direction(input);
+      } while (!d.isValide());
+      return d;
+    }
+}
   public static Direction getDirectionHorizontaleVerticale() {
     Direction d;
     do {

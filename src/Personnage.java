@@ -87,7 +87,16 @@ public abstract class Personnage {
   public void migre(SalleDedans destination) {
     // Libérer la salle d'origine
     if (this.salle != null) {
-      this.salle.setOccupant(null);
+        this.salle.setOccupant(null);
+        
+        // Si c'était une SalleJoueur, la transformer en SalleVide
+        if (this instanceof Joueur && this.salle instanceof SalleJoueur) {
+            int lig = this.salle.getLigne();
+            int col = this.salle.getColonne();
+            Plateau p = this.salle.getPlateau();
+            SalleVide nouvelleSalle = new SalleVide(lig, col, p);
+            p.setSalle(nouvelleSalle, lig, col);
+        }
     }
     
     // Affecter la nouvelle salle au personnage
@@ -98,7 +107,7 @@ public abstract class Personnage {
     
     // Faire décroître l'énergie
     this.perdreEnergie(1);
-  }
+}
 
   /**
    * Déplacement du personnage

@@ -9,9 +9,8 @@ public class SalleJoueur extends SalleDedans {
 
   @Override
   public String toString() {
-      return "J";
+      return "♜"; 
   }
-  
   @Override
   public void entre(Personnage p) {
     // Comportement similaire à une salle normale
