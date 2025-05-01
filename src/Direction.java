@@ -11,6 +11,9 @@ public class Direction {
   public static final Direction BAS_DROITE = new Direction("jl");
   private static final Direction[] DIRECTIONS = { DROITE, HAUT_DROITE, HAUT, HAUT_GAUCHE, GAUCHE, BAS_GAUCHE, BAS,
       BAS_DROITE };
+  
+  // Use a shared Scanner for all input
+  private static final Scanner scanner = new Scanner(System.in);
 
   private int dLig;
 
@@ -43,17 +46,17 @@ public class Direction {
       rang = 7 - rang + 1;
     return rang;
   }
+  
   public static Direction getDirectionQuelconque() {
-    try (Scanner scanner = new Scanner(System.in)) {
-      Direction d;
-      do {
-          System.out.print("Entrez une direction avec 'h','j','k','l' ou combinaison (ex: 'kh' pour haut gauche) : ");
-          String input = scanner.nextLine().trim();
-          d = new Direction(input);
-      } while (!d.isValide());
-      return d;
-    }
-}
+    Direction d;
+    do {
+        System.out.print("Entrez une direction avec 'h','j','k','l' ou combinaison (ex: 'kh' pour haut gauche) : ");
+        String input = scanner.nextLine().trim();
+        d = new Direction(input);
+    } while (!d.isValide());
+    return d;
+  }
+  
   public static Direction getDirectionHorizontaleVerticale() {
     Direction d;
     do {
