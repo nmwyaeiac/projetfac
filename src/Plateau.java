@@ -230,14 +230,14 @@
     * Affiche le plateau de jeu et les informations sur le joueur
     */
   // Modification de la classe Plateau.java
-public void afficherPlateau() {
-  System.out.println();
-  for (int i = 0; i < nbLignes; i++) {
-      for (int j = 0; j < nbColonnes; j++) {
-          System.out.print(grille[i][j].toString() + " ");
-      }
-      System.out.println();
-  }
+  public void afficherPlateau() {
+    System.out.println();
+    for (int i = 0; i < getNbLig(); i++) {
+        for (int j = 0; j < getNbCol(); j++) {
+            System.out.print(grille[i][j].toString() + " ");
+        }
+        System.out.println();
+    }
 }
  
    /**

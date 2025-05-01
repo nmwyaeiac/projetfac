@@ -45,8 +45,8 @@ public class SalleDedans extends Salle
      */
     @Override
     public String toString() {
-        if (personnage != null) {
-            return personnage.toString();
+        if (occupant != null) {
+            return occupant.toString();
         } else if (bidon != null) {
             return bidon.toString();
         } else {
