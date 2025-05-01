@@ -45,16 +45,14 @@ public class SalleDedans extends Salle
      */
     @Override
     public String toString() {
-        if (occupant != null && bidon != null) {
-            return bidon.toString() + occupant.toString();
-        } else if (occupant != null) {
-            return "." + occupant.toString();
+        if (personnage != null) {
+            return personnage.toString();
         } else if (bidon != null) {
-            return bidon.toString() + ".";
+            return bidon.toString();
         } else {
-            return "..";
+            return "□";
         }
-    }    
+    }
 
     /**
      * Restitue la salle voisine dans une direction donnée
@@ -136,4 +134,5 @@ public class SalleDedans extends Salle
             }
         }
     }
+    
 }

@@ -6,7 +6,7 @@ public class SalleBordure extends Salle {
 
   @Override
   public String toString() {
-    return Plateau.BORD;
+      return "■";
   }
   
   @Override

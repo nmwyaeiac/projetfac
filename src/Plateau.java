@@ -229,13 +229,16 @@
    /**
     * Affiche le plateau de jeu et les informations sur le joueur
     */
-   public void afficherPlateau() {
-     System.out.println("\n=== ÉTAT DU PLATEAU ===");
-     System.out.println(this.toString());
-     System.out.println("Adversaires restants: " + adversaires.stream().filter(a -> !a.estNeutralise()).count());
-     System.out.println("Collecteur: " + collecteur.getEnergie() + " unités d'énergie");
-     System.out.println("Énergie du joueur: " + joueur.getEnergie() + " / " + ParametresJeu.MAX_ENERGIE);
-   }
+  // Modification de la classe Plateau.java
+public void afficherPlateau() {
+  System.out.println();
+  for (int i = 0; i < nbLignes; i++) {
+      for (int j = 0; j < nbColonnes; j++) {
+          System.out.print(grille[i][j].toString() + " ");
+      }
+      System.out.println();
+  }
+}
  
    /**
     * Restitue l'état du plateau (C'est cette chaîne qu'il faut afficher à chaque
@@ -245,6 +248,7 @@
     */
     
    @Override
+
    public String toString() {
        StringBuilder sb = new StringBuilder();
        
