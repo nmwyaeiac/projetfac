@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -23,48 +21,24 @@ public class AdversaireIntelligent extends Adversaire {
             return;
         }
         
-        // Détermine si l'adversaire doit s'approcher ou fuir
-        boolean approcher = plusFortQueJoueur();
+        // Direction optimale (vers ou loin du joueur selon la force)
+        Direction directionOptimale = plusFortQueJoueur() ? directionVersJoueur() : directionFuiteJoueur();
         
-        // Cherche les directions possibles (non bloquées)
-        List<Direction> directionsLibres = new ArrayList<>();
-        
-        // Teste les 8 directions possibles
-        for (int i = 0; i < 8; i++) {
-            Direction d = new Direction(i);
-            Salle voisine = salle.getVoisine(d);
-            
-            if (voisine != null && voisine instanceof SalleDedans && 
-                    (!((SalleDedans) voisine).estOccupee() || 
-                    (((SalleDedans) voisine).getOccupant() == joueur && !joueur.estNeutralise()))) {
-                directionsLibres.add(d);
+        // Tente de se déplacer dans la direction optimale
+        Salle nouvelleSalle = salle.getVoisine(directionOptimale);
+        if (nouvelleSalle != null && nouvelleSalle instanceof SalleDedans) {
+            SalleDedans destination = (SalleDedans) nouvelleSalle;
+            if (!destination.estOccupee() || (destination.getOccupant() == joueur && !joueur.estNeutralise())) {
+                // La salle est libre ou contient le joueur (non neutralisé)
+                nouvelleSalle.entre(this);
+                // Afficher le plateau après chaque déplacement d'adversaire
+                System.out.println("Un adversaire s'est déplacé.");
+                salle.getPlateau().afficherPlateau();
+            } else {
+                System.out.println("L'adversaire ne peut pas entrer dans la salle (déjà occupée).");
             }
-        }
-        
-        if (directionsLibres.isEmpty()) {
-            System.out.println("L'adversaire intelligent est bloqué et ne peut pas se déplacer.");
-            return;
-        }
-        
-        // Direction optimale (vers ou loin du joueur)
-        Direction directionOptimale = approcher ? directionVersJoueur() : directionFuiteJoueur();
-        
-        // Cherche la meilleure direction parmi celles disponibles
-        Direction meilleureDirection = directionsLibres.get(0);
-        int meilleurScore = evaluerDirection(meilleureDirection, directionOptimale);
-        
-        for (Direction d : directionsLibres) {
-            int score = evaluerDirection(d, directionOptimale);
-            if (score > meilleurScore) {
-                meilleurScore = score;
-                meilleureDirection = d;
-            }
-        }
-        
-        // Déplacement avec vérification supplémentaire
-        Salle nouvelleSalle = salle.getVoisine(meilleureDirection);
-        if (nouvelleSalle != null && !estNeutralise()) {
-            nouvelleSalle.entre(this);
+        } else {
+            System.out.println("L'adversaire ne peut pas se déplacer dans cette direction.");
         }
     }
     

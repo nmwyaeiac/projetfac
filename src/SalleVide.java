@@ -9,11 +9,11 @@ public class SalleVide extends SalleDedans {
 
   @Override
   public String toString() {
-    if (occupant != null) {
-      return "." + occupant.toString();
-    } else {
-      return ".."; // Deux points pour une salle totalement vide
-    }
+      if (occupant != null) {
+          return occupant.toString();
+      } else {
+          return "□"; // Un seul caractère pour une salle vide
+      }
   }
   
   @Override

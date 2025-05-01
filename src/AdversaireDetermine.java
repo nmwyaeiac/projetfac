@@ -28,6 +28,9 @@ public class AdversaireDetermine extends Adversaire {
             if (!destination.estOccupee() || (destination.getOccupant() == joueur && !joueur.estNeutralise())) {
                 // La salle est libre ou contient le joueur (non neutralisé)
                 nouvelleSalle.entre(this);
+                // Afficher le plateau après chaque déplacement d'adversaire
+                System.out.println("Un adversaire s'est déplacé.");
+                salle.getPlateau().afficherPlateau();
             } else {
                 System.out.println("L'adversaire ne peut pas entrer dans la salle (déjà occupée).");
             }

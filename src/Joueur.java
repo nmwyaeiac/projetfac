@@ -27,23 +27,25 @@
      }
  
      @Override
-     public void deplacer() {
-         for (int i = 0; i < 2; i++) {
-             if (estNeutralise()) return;
- 
-             System.out.println("Déplacement " + (i+1) + "/2 du joueur");
-             Direction d = Direction.getDirectionQuelconque();
-             Salle nouvelleSalle = salle.getVoisine(d);
- 
-             if (nouvelleSalle != null && nouvelleSalle instanceof SalleDedans) {
-                 System.out.println("Déplacement vers " + d);
-                 nouvelleSalle.entre(this);
-             } else {
-                 System.out.println("Déplacement impossible dans cette direction.");
-                 i--; // On redonne une chance au joueur
-             }
-         }
-     }
+public void deplacer() {
+    for (int i = 0; i < 2; i++) {
+        if (estNeutralise()) return;
+
+        System.out.println("Déplacement " + (i+1) + "/2 du joueur");
+        Direction d = Direction.getDirectionQuelconque();
+        Salle nouvelleSalle = salle.getVoisine(d);
+
+        if (nouvelleSalle != null && nouvelleSalle instanceof SalleDedans) {
+            System.out.println("Déplacement vers " + d);
+            nouvelleSalle.entre(this);
+            // Afficher le plateau après chaque déplacement du joueur
+            salle.getPlateau().afficherPlateau();
+        } else {
+            System.out.println("Déplacement impossible dans cette direction.");
+            i--; // On redonne une chance au joueur
+        }
+    }
+}
  
      @Override
      public void interagit(Reservoir r) {

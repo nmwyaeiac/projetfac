@@ -36,16 +36,14 @@
          Scanner scanner = new Scanner(System.in);
  
          System.out.println("=== DÉBUT DU JEU ===");
-         plateau.afficherPlateau();
+ 
  
          while (!joueur.estNeutralise() && adversaires.stream().anyMatch(a -> !a.estNeutralise())) {
              System.out.println("\n--- Tour " + (++tours) + " ---");
              
              // 1. Déplacement du joueur (deux déplacements)
              System.out.println("C'est votre tour de jouer!");
-             joueur.deplacer();
-             plateau.afficherPlateau();
-             
+            
              if (joueur.estNeutralise()) {
                  break; // Le joueur a été neutralisé pendant son déplacement
              }
@@ -65,7 +63,7 @@
                      }
                  }
                  
-                 plateau.afficherPlateau();
+               
              }
              
              // 3. Tous les 5 tours, on propose au joueur d'arrêter

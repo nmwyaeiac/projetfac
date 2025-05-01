@@ -9,7 +9,7 @@ public class SalleJoueur extends SalleDedans {
 
   @Override
   public String toString() {
-    return "♜.";
+      return "J";
   }
   
   @Override

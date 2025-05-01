@@ -43,16 +43,16 @@ public class SalleDedans extends Salle
      * Restitue la chaîne qui représente le contenu de la salle
      * @return
      */
-    @Override
-    public String toString() {
-        if (occupant != null) {
-            return occupant.toString();
-        } else if (bidon != null) {
-            return bidon.toString();
-        } else {
-            return "□";
-        }
+  @Override
+public String toString() {
+    if (occupant != null) {
+        return occupant.toString();
+    } else if (bidon != null) {
+        return bidon.toString();
+    } else {
+        return "□";
     }
+}
 
     /**
      * Restitue la salle voisine dans une direction donnée

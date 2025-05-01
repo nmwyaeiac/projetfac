@@ -28,12 +28,11 @@ public class SalleBidon extends SalleDedans
      * @return
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         if (occupant != null) {
-            return bidon.toString() + occupant.toString();
+            return occupant.toString(); // Priorité au personnage
         } else {
-            return bidon.toString() + ".";
+            return bidon.toString(); // Sinon afficher le bidon
         }
     }
 

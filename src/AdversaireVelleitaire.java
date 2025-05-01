@@ -11,7 +11,6 @@ public class AdversaireVelleitaire extends Adversaire {
     public AdversaireVelleitaire(int inertie, Joueur joueur) {
         super(inertie, joueur);
     }
-    
     @Override
     public void deplacer() {
         if (estNeutralise() || salle == null) return;
@@ -25,29 +24,16 @@ public class AdversaireVelleitaire extends Adversaire {
         // Direction optimale (vers ou loin du joueur selon la force)
         Direction directionOptimale = plusFortQueJoueur() ? directionVersJoueur() : directionFuiteJoueur();
         
-        // On biaise le mouvement avec 70% de chance de prendre la direction optimale
-        Direction directionChoisie;
-        int choix = random.nextInt(10);
-        
-        if (choix < 7) {
-            // 70% de chance de prendre la direction optimale
-            directionChoisie = directionOptimale;
-        } else if (choix < 9) {
-            // 20% de chance de prendre une direction aléatoire
-            directionChoisie = new Direction(random.nextInt(8));
-        } else {
-            // 10% de chance de ne pas bouger
-            System.out.println("L'adversaire reste immobile.");
-            return;
-        }
-        
-        // Tente de se déplacer dans la direction choisie
-        Salle nouvelleSalle = salle.getVoisine(directionChoisie);
+        // Tente de se déplacer dans la direction optimale
+        Salle nouvelleSalle = salle.getVoisine(directionOptimale);
         if (nouvelleSalle != null && nouvelleSalle instanceof SalleDedans) {
             SalleDedans destination = (SalleDedans) nouvelleSalle;
             if (!destination.estOccupee() || (destination.getOccupant() == joueur && !joueur.estNeutralise())) {
                 // La salle est libre ou contient le joueur (non neutralisé)
                 nouvelleSalle.entre(this);
+                // Afficher le plateau après chaque déplacement d'adversaire
+                System.out.println("Un adversaire s'est déplacé.");
+                salle.getPlateau().afficherPlateau();
             } else {
                 System.out.println("L'adversaire ne peut pas entrer dans la salle (déjà occupée).");
             }
