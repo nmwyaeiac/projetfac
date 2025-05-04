@@ -16,8 +16,8 @@ public abstract class Salle {
   /*
    * Déclaration des attributs d'une salle et accesseurs.
    */
-  private int colonne, ligne;
-  private Plateau plateau;
+  protected int colonne, ligne;
+  protected Plateau plateau;
 
   public int getColonne() {
     return colonne;

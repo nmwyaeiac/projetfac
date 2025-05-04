@@ -15,6 +15,7 @@ public abstract class Reservoir
     public Reservoir(int energie) {
         this.energie = energie;
     }
+ 
 
     public int getEnergie() {
         return energie;

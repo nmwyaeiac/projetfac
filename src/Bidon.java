@@ -31,6 +31,5 @@ public class Bidon extends ReserveLimitee
     @Override
     public String toString() {
         return energie > 0 ? "☼" : "○";
-    }
-    
+    } 
 }
