@@ -59,4 +59,9 @@ public class AdversaireDetermine extends Adversaire {
     public String toString() {
         return "♞";
     }
+    @Override
+protected Direction choisirDirection() {
+    return plusFortQueJoueur() ? directionVersJoueur() : directionFuiteJoueur();
+}
+    
 }

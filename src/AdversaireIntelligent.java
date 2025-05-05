@@ -87,4 +87,28 @@ public class AdversaireIntelligent extends Adversaire {
     public String toString() {
         return "♝";
     }
+    @Override
+protected Direction choisirDirection() {
+    Direction optimale = plusFortQueJoueur() ? directionVersJoueur() : directionFuiteJoueur();
+    
+    // Trouver la meilleure direction en fonction des obstacles
+    Direction meilleure = optimale;
+    int meilleurScore = -1;
+    
+    for (int i = 0; i < 8; i++) {
+        Direction direction = Direction.getDirection(i);
+        Salle voisine = salle.getVoisine(direction);
+        
+        if (voisine instanceof SalleDedans && !((SalleDedans) voisine).estOccupee()) {
+            int score = evaluerDirection(direction, optimale);
+            if (score > meilleurScore) {
+                meilleurScore = score;
+                meilleure = direction;
+            }
+        }
+    }
+    
+    return meilleure;
+}
+    
 }

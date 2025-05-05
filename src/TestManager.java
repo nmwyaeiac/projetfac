@@ -163,6 +163,8 @@ public class TestManager {
         resetParametres();
         ParametresJeu.NB_LIGNES = 5;
         ParametresJeu.NB_COLONNES = 5;
+        ParametresJeu.NB_ADVERSAIRES = 2;
+        ParametresJeu.NB_BIDONS = 3;
         Jeu jeu = new Jeu();
         jeu.joue();
     }

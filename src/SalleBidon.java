@@ -41,8 +41,7 @@ public class SalleBidon extends SalleDedans
      * @param p
      */
     @Override
-    public void entre(Personnage p)
-    {
+    public void entre(Personnage p) {
         // Si la salle est occupée, on gère l'interaction comme une SalleDedans normale
         if (estOccupee()) {
             super.entre(p);
@@ -50,8 +49,9 @@ public class SalleBidon extends SalleDedans
             // La salle est libre, le personnage entre
             p.migre(this);
             
-            // Le personnage interagit avec le bidon
+            // Le personnage interagit avec le bidon (peu importe que ce soit joueur ou adversaire)
             p.interagit(bidon);
         }
     }
+    
 }
