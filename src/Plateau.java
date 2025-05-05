@@ -10,6 +10,7 @@ public class Plateau {
   private Joueur joueur;
   private List<Adversaire> adversaires;
   private Collecteur collecteur;
+  private final Random random = new Random();
 
   public int getNbLig() {
     return grille.length;
@@ -56,8 +57,6 @@ public class Plateau {
   }
 
   private void initContenu(int nbAdversaires, int nbBidons) {
-    Random random = new Random();
-    
     // Création du collecteur
     this.collecteur = new Collecteur();
     
@@ -125,8 +124,16 @@ public class Plateau {
       }
       
       if (positionLibre) {
-        // Choisir aléatoirement un type d'adversaire
-        int typeAdversaire = random.nextInt(3); // 0, 1 ou 2
+        // Choix du type d'adversaire selon le test sélectionné ou aléatoire
+        int typeAdversaire;
+        
+        // Vérifier s'il y a un type spécifique à tester
+        if (TestManager.getTypeAdversaireTest() > 0) {
+            typeAdversaire = TestManager.getTypeAdversaireTest() - 1; // Ajuster l'indice (1->0, 2->1, 3->2)
+        } else {
+            // Choix aléatoire comme avant
+            typeAdversaire = random.nextInt(3); // 0, 1 ou 2
+        }
         
         // Inertie aléatoire entre MIN et MAX
         int inertie = ParametresJeu.MIN_INERTIE_ADVERSAIRE + 

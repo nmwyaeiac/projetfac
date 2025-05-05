@@ -27,18 +27,7 @@
          this.adversaires = plateau.getAdversaires();
          this.collecteur = plateau.getCollecteur();
      }
-     public Jeu(boolean modeDebug) {
-        this.modeDebug = modeDebug;
-        this.plateau = new Plateau(
-            ParametresJeu.NB_LIGNES,
-            ParametresJeu.NB_COLONNES,
-            ParametresJeu.NB_ADVERSAIRES,
-            ParametresJeu.NB_BIDONS
-        );
-        this.joueur = plateau.getJoueur();
-        this.adversaires = plateau.getAdversaires();
-        this.collecteur = plateau.getCollecteur();
-    }
+ 
      /**
       * Démarre et gère une partie de jeu
       */
