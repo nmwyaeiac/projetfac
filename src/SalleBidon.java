@@ -1,31 +1,29 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 /**
- * Salle interne au plateau qui contient un bidon.
- * En plus de ce que font les autres instances de SalleDedans, elles doivent gérer l'interaction entre le personnage entrant et le bidon qu'elles contiennent — pour y prendre de l'énergie
- * @author jo
+ * Représente une salle contenant un bidon d'énergie.
+ * Les personnages qui entrent dans cette salle peuvent interagir avec le bidon
+ * pour récupérer de l'énergie.
  */
 public class SalleBidon extends SalleDedans
 {
     /**
-     * Création d'une salle qui contient un bidon.
-     * Elle doit s'affecter un nouveau bidon plein.
-     * @param lig Numéro de la ligne dans le plateau
-     * @param col Numéro de la colonne dans le plateau
-     * @param p Le plateau qui contient la salle
+     * Constructeur d'une salle contenant un bidon.
+     * Crée automatiquement un bidon plein dans la salle.
+     * 
+     * @param lig Ligne de la salle sur le plateau
+     * @param col Colonne de la salle sur le plateau
+     * @param p Plateau contenant la salle
      */
     public SalleBidon(int lig, int col, Plateau p)
     {
-        super(lig, col, p);
+        super(lig, col, p); // Appel au constructeur de la classe parente
         this.bidon = new Bidon(); // Crée un nouveau bidon plein
     }
 
     /**
-     * La chaîne qui représente une telle salle doit restituer le symbole d'un bidon en plus de celui de leur occupant éventuel
-     * @return
+     * Représentation textuelle de la salle.
+     * Priorité d'affichage: occupant > bidon.
+     * 
+     * @return Symbole représentant le contenu de la salle
      */
     @Override
     public String toString() {
@@ -37,8 +35,11 @@ public class SalleBidon extends SalleDedans
     }
 
     /**
-     * Si le personnage p est entré, il peut prendre de l'énergie dans le bidon
-     * @param p
+     * Gère l'entrée d'un personnage dans la salle.
+     * Si la salle est occupée, déclenche un combat.
+     * Sinon, permet au personnage d'interagir avec le bidon.
+     * 
+     * @param p Personnage qui tente d'entrer
      */
     @Override
     public void entre(Personnage p) {
@@ -53,5 +54,4 @@ public class SalleBidon extends SalleDedans
             p.interagit(bidon);
         }
     }
-    
 }
