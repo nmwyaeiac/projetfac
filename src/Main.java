@@ -16,7 +16,18 @@ public class Main {
         switch (choix) {
             case 1 -> lancerJeu();
             case 2 -> lancerTests();
-            case 3 -> ParametresJeu.configurerJeu();
+            case 3 -> {
+                // Appeler la configuration des paramètres
+                ParametresJeu.configurerJeu();
+                
+                // Demander à l'utilisateur s'il souhaite lancer le jeu maintenant
+                System.out.println("\nVoulez-vous lancer le jeu avec ces paramètres ? (o/n) : ");
+                String reponse = scanner.nextLine().trim().toLowerCase();
+                
+                if (reponse.equals("o")) {
+                    lancerJeu();
+                }
+            }
             default -> {
                 System.out.println("Choix invalide. Lancement du jeu par défaut.");
                 lancerJeu();
