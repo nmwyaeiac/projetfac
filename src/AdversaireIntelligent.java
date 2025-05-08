@@ -1,9 +1,9 @@
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-/**
- * Représente un adversaire intelligent qui tente d'avancer le plus efficacement possible 
- * en direction du joueur ou de le fuir, en tenant compte des zones de blocage.
- */
 public class AdversaireIntelligent extends Adversaire {
     private static final Random random = new Random();
     
@@ -12,34 +12,29 @@ public class AdversaireIntelligent extends Adversaire {
     }
     
     @Override
-    public void deplacer() {
-        if (estNeutralise() || salle == null) return;
+    protected Direction choisirDirection() {
+        Direction directionBase = plusFortQueJoueur() ? directionVersJoueur() : directionFuiteJoueur();
         
-        // Vérifier que le joueur n'a pas été neutralisé
-        if (joueur.estNeutralise()) {
-            System.out.println("Le joueur est neutralisé, l'adversaire ne se déplace plus.");
-            return;
-        }
+        // Liste de toutes les directions évaluées par score
+        List<Map.Entry<Direction, Integer>> directionsEvaluees = new ArrayList<>();
         
-        // Direction optimale (vers ou loin du joueur selon la force)
-        Direction directionOptimale = plusFortQueJoueur() ? directionVersJoueur() : directionFuiteJoueur();
-        
-        // Tente de se déplacer dans la direction optimale
-        Salle nouvelleSalle = salle.getVoisine(directionOptimale);
-        if (nouvelleSalle != null && nouvelleSalle instanceof SalleDedans) {
-            SalleDedans destination = (SalleDedans) nouvelleSalle;
-            if (!destination.estOccupee() || (destination.getOccupant() == joueur && !joueur.estNeutralise())) {
-                // La salle est libre ou contient le joueur (non neutralisé)
-                nouvelleSalle.entre(this);
-                // Afficher le plateau après chaque déplacement d'adversaire
-                System.out.println("Un adversaire s'est déplacé.");
-                salle.getPlateau().afficherPlateau();
-            } else {
-                System.out.println("L'adversaire ne peut pas entrer dans la salle (déjà occupée).");
+        // Évaluer toutes les directions
+        for (int i = 0; i < 8; i++) {
+            Direction dir = Direction.getDirection(i);
+            Salle voisine = salle.getVoisine(dir);
+            
+            // Vérifier si la direction est viable
+            if (voisine instanceof SalleDedans && !((SalleDedans) voisine).estOccupee()) {
+                int score = evaluerDirection(dir, directionBase);
+                directionsEvaluees.add(new AbstractMap.SimpleEntry<>(dir, score));
             }
-        } else {
-            System.out.println("L'adversaire ne peut pas se déplacer dans cette direction.");
         }
+        
+        // Trier par score décroissant
+        directionsEvaluees.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+        
+        // Retourner la meilleure direction ou la direction de base si aucune n'est valide
+        return directionsEvaluees.isEmpty() ? directionBase : directionsEvaluees.get(0).getKey();
     }
     
     /**
@@ -68,47 +63,7 @@ public class AdversaireIntelligent extends Adversaire {
     }
     
     @Override
-    public void interagit(Reservoir r) {
-        if (r instanceof Bidon) {
-            // L'adversaire prend toute l'énergie possible
-            int energieDisponible = r.getEnergie();
-            int energieMax = ParametresJeu.MAX_ENERGIE - getEnergie();
-            int quantite = Math.min(energieDisponible, energieMax);
-            
-            if (quantite > 0) {
-                int energiePrise = ((Bidon) r).puiser(quantite);
-                recevoirEnergie(energiePrise);
-                System.out.println("L'adversaire intelligent a pris " + energiePrise + " unités d'énergie du bidon.");
-            }
-        }
-    }
-    
-    @Override
     public String toString() {
         return "♝";
     }
-    @Override
-protected Direction choisirDirection() {
-    Direction optimale = plusFortQueJoueur() ? directionVersJoueur() : directionFuiteJoueur();
-    
-    // Trouver la meilleure direction en fonction des obstacles
-    Direction meilleure = optimale;
-    int meilleurScore = -1;
-    
-    for (int i = 0; i < 8; i++) {
-        Direction direction = Direction.getDirection(i);
-        Salle voisine = salle.getVoisine(direction);
-        
-        if (voisine instanceof SalleDedans && !((SalleDedans) voisine).estOccupee()) {
-            int score = evaluerDirection(direction, optimale);
-            if (score > meilleurScore) {
-                meilleurScore = score;
-                meilleure = direction;
-            }
-        }
-    }
-    
-    return meilleure;
-}
-    
 }

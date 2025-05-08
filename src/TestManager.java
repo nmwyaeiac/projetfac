@@ -16,6 +16,7 @@ public class TestManager {
             System.out.println("4. Test: Combat avec adversaires");
             System.out.println("5. Test: Types d'adversaires");
             System.out.println("6. Test: Petit plateau");
+            System.out.println("7. Configurer les paramètres du jeu");
             System.out.println("0. Quitter");
             
             System.out.print("Votre choix: ");
@@ -29,6 +30,7 @@ public class TestManager {
                 case 4 -> lancerTestCombat();
                 case 5 -> lancerTestTypesAdversaires();
                 case 6 -> lancerTestPetitPlateau();
+                case 7 -> ParametresJeu.configurerJeu();
                 default -> System.out.println("Choix invalide");
             }
         }
@@ -54,7 +56,19 @@ public class TestManager {
         return typeAdversaireTest;
     }
     
-    // Méthodes pour lancer les différents tests
+    private static void resetParametres() {
+        // Réinitialiser tous les paramètres à leurs valeurs par défaut
+        ParametresJeu.setNbLignes(11);
+        ParametresJeu.setNbColonnes(11);
+        ParametresJeu.setNbAdversaires(10);
+        ParametresJeu.setNbBidons(15);
+        ParametresJeu.setMaxEnergie(10);
+        ParametresJeu.setInertieJoueur(5);
+        ParametresJeu.setMinInertieAdversaire(2);
+        ParametresJeu.setMaxInertieAdversaire(9);
+        setTypeAdversaireTest(0);
+    }
+    
     private static void lancerJeuStandard() {
         resetParametres();
         setTypeAdversaireTest(0); // Réinitialise le type d'adversaire
@@ -65,8 +79,8 @@ public class TestManager {
     private static void lancerTestJoueurSeul() {
         resetParametres();
         // Modifier les paramètres pour ce test
-        ParametresJeu.NB_ADVERSAIRES = 0;
-        ParametresJeu.NB_BIDONS = 0;
+        ParametresJeu.setNbAdversaires(0);
+        ParametresJeu.setNbBidons(0);
         
         Jeu jeu = new Jeu();
         jeu.joue();
@@ -74,7 +88,7 @@ public class TestManager {
     
     private static void lancerTestBidons() {
         resetParametres();
-        ParametresJeu.NB_ADVERSAIRES = 0;
+        ParametresJeu.setNbAdversaires(0);
         Jeu jeu = new Jeu();
         jeu.joue();
     }
@@ -82,11 +96,11 @@ public class TestManager {
     private static void lancerTestCombat() {
         resetParametres();
         // Modifier les paramètres pour ce test
-        ParametresJeu.NB_LIGNES = 7;     // Plateau plus petit pour faciliter les rencontres
-        ParametresJeu.NB_COLONNES = 7;
-        ParametresJeu.NB_ADVERSAIRES = 3; // Moins d'adversaires pour un test ciblé
-        ParametresJeu.NB_BIDONS = 5;     // Quelques bidons pour que le joueur puisse gagner en énergie
-        ParametresJeu.INERTIE_JOUEUR = 7; // Joueur plus fort pour tester la victoire en combat
+        ParametresJeu.setNbLignes(7);
+        ParametresJeu.setNbColonnes(7);
+        ParametresJeu.setNbAdversaires(3);
+        ParametresJeu.setNbBidons(5);
+        ParametresJeu.setInertieJoueur(7);
         
         System.out.println("=== TEST DE COMBAT ===");
         System.out.println("Ce test utilise un plateau réduit avec 3 adversaires.");
@@ -112,30 +126,30 @@ public class TestManager {
         int choixType = lireEntier(scanner);
         
         // Configuration du jeu selon le choix
-        ParametresJeu.NB_LIGNES = 9;
-        ParametresJeu.NB_COLONNES = 9;
-        ParametresJeu.NB_BIDONS = 10;
+        ParametresJeu.setNbLignes(9);
+        ParametresJeu.setNbColonnes(9);
+        ParametresJeu.setNbBidons(10);
         
         switch (choixType) {
             case 1 -> {
                 System.out.println("\n=== TEST ADVERSAIRE VELLÉITAIRE ===");
                 System.out.println("Ce test présente uniquement des adversaires velléitaires (♟)");
                 System.out.println("Ces adversaires se déplacent avec une part d'aléatoire.");
-                ParametresJeu.NB_ADVERSAIRES = 3;
+                ParametresJeu.setNbAdversaires(3);
                 setTypeAdversaireTest(1); // 1 pour velléitaire
             }
             case 2 -> {
                 System.out.println("\n=== TEST ADVERSAIRE DÉTERMINÉ ===");
                 System.out.println("Ce test présente uniquement des adversaires déterminés (♞)");
                 System.out.println("Ces adversaires vont directement vers ou s'éloignent du joueur.");
-                ParametresJeu.NB_ADVERSAIRES = 3;
+                ParametresJeu.setNbAdversaires(3);
                 setTypeAdversaireTest(2); // 2 pour déterminé
             }
             case 3 -> {
                 System.out.println("\n=== TEST ADVERSAIRE INTELLIGENT ===");
                 System.out.println("Ce test présente uniquement des adversaires intelligents (♝)");
                 System.out.println("Ces adversaires cherchent le chemin optimal pour atteindre le joueur.");
-                ParametresJeu.NB_ADVERSAIRES = 3;
+                ParametresJeu.setNbAdversaires(3);
                 setTypeAdversaireTest(3); // 3 pour intelligent
             }
             case 4 -> {
@@ -145,12 +159,12 @@ public class TestManager {
                 System.out.println("- ♞ : Adversaire Déterminé (va directement vers ou s'éloigne du joueur)");
                 System.out.println("- ♝ : Adversaire Intelligent (cherche le chemin optimal)");
                 System.out.println("Observez leurs différents comportements de déplacement !");
-                ParametresJeu.NB_ADVERSAIRES = 6;  // 2 de chaque type
+                ParametresJeu.setNbAdversaires(6);  // 2 de chaque type
                 setTypeAdversaireTest(0); // 0 pour tous types
             }
             default -> {
                 System.out.println("Choix invalide. Test avec tous les types d'adversaires par défaut.");
-                ParametresJeu.NB_ADVERSAIRES = 6;
+                ParametresJeu.setNbAdversaires(6);
                 setTypeAdversaireTest(0);
             }
         }
@@ -161,23 +175,11 @@ public class TestManager {
     
     private static void lancerTestPetitPlateau() {
         resetParametres();
-        ParametresJeu.NB_LIGNES = 5;
-        ParametresJeu.NB_COLONNES = 5;
-        ParametresJeu.NB_ADVERSAIRES = 2;
-        ParametresJeu.NB_BIDONS = 3;
+        ParametresJeu.setNbLignes(5);
+        ParametresJeu.setNbColonnes(5);
+        ParametresJeu.setNbAdversaires(2);
+        ParametresJeu.setNbBidons(3);
         Jeu jeu = new Jeu();
         jeu.joue();
-    }
-    
-    private static void resetParametres() {
-        // Réinitialiser tous les paramètres à leurs valeurs par défaut
-        ParametresJeu.NB_LIGNES = 11;
-        ParametresJeu.NB_COLONNES = 11;
-        ParametresJeu.NB_ADVERSAIRES = 10;
-        ParametresJeu.NB_BIDONS = 15;
-        ParametresJeu.MAX_ENERGIE = 10;
-        ParametresJeu.INERTIE_JOUEUR = 5;
-        // Réinitialiser le type d'adversaire à tester
-        setTypeAdversaireTest(0);
     }
 }

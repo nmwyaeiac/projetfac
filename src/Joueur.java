@@ -1,10 +1,11 @@
 import java.util.Scanner;
+
 public class Joueur extends Personnage {
     private final Collecteur collecteur;
-    private static final Scanner scanner = new Scanner(System.in); // Make scanner static and shared
+    private static final Scanner scanner = new Scanner(System.in);
 
     public Joueur(int ligne, int colonne, Plateau plateau, Collecteur collecteur) {
-        super(ParametresJeu.INERTIE_JOUEUR); // Inertie fixée selon paramètres
+        super(ParametresJeu.getInertieJoueur()); // Inertie fixée selon paramètres
         this.collecteur = collecteur;
         SalleDedans salleCentrale = (SalleDedans) plateau.getSalle(ligne, colonne);
         this.salle = salleCentrale;
@@ -56,12 +57,12 @@ public class Joueur extends Personnage {
             }
             
             if (choix == 1) {
-                System.out.print("Quantité à prendre (max " + Math.min(b.getEnergie(), ParametresJeu.MAX_ENERGIE - getEnergie()) + "): ");
+                System.out.print("Quantité à prendre (max " + Math.min(b.getEnergie(), ParametresJeu.getMaxEnergie() - getEnergie()) + "): ");
                 int quantite = -1;
-                while (quantite < 0 || quantite > Math.min(b.getEnergie(), ParametresJeu.MAX_ENERGIE - getEnergie())) {
+                while (quantite < 0 || quantite > Math.min(b.getEnergie(), ParametresJeu.getMaxEnergie() - getEnergie())) {
                     try {
                         quantite = Integer.parseInt(scanner.nextLine());
-                        if (quantite < 0 || quantite > Math.min(b.getEnergie(), ParametresJeu.MAX_ENERGIE - getEnergie())) {
+                        if (quantite < 0 || quantite > Math.min(b.getEnergie(), ParametresJeu.getMaxEnergie() - getEnergie())) {
                             System.out.println("Quantité invalide.");
                         }
                     } catch (NumberFormatException e) {

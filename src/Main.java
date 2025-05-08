@@ -8,13 +8,15 @@ public class Main {
         System.out.println("Que souhaitez-vous faire ?");
         System.out.println("1. Lancer une partie de jeu");
         System.out.println("2. Accéder aux tests");
+        System.out.println("3. Configurer les paramètres du jeu");
         
-        System.out.print("Votre choix (1-2) : ");
+        System.out.print("Votre choix (1-3) : ");
         int choix = lireEntier(scanner);
         
         switch (choix) {
             case 1 -> lancerJeu();
             case 2 -> lancerTests();
+            case 3 -> ParametresJeu.configurerJeu();
             default -> {
                 System.out.println("Choix invalide. Lancement du jeu par défaut.");
                 lancerJeu();
