@@ -44,7 +44,19 @@ public class TestManager {
                 case 4 -> lancerTestCombat(); // Test des combats
                 case 5 -> lancerTestTypesAdversaires(); // Test des types d'adversaires
                 case 6 -> lancerTestPetitPlateau(); // Test avec un petit plateau
-                case 7 -> ParametresJeu.configurerJeu(); // Configuration des paramètres
+                case 7 -> {
+                    // Configuration des paramètres puis proposition de lancer le jeu
+                    ParametresJeu.configurerJeu();
+                    
+                    // Demande à l'utilisateur s'il souhaite lancer le jeu avec ces paramètres
+                    System.out.println("\nVoulez-vous lancer une partie avec ces paramètres ? (o/n) : ");
+                    String reponse = scanner.nextLine().trim().toLowerCase();
+                    
+                    if (reponse.equals("o")) {
+                        Jeu jeu = new Jeu();
+                        jeu.joue();
+                    }
+                }
                 default -> System.out.println("Choix invalide");
             }
         }
