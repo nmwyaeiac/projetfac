@@ -127,55 +127,54 @@ public class SalleDedans extends Salle {
         this.occupant = null; // Initialement vide
         this.bidon = null; // Pas de bidon par défaut
     }
-
-    /**
-     * Gère l'entrée d'un personnage dans la salle.
-     * Si la salle est occupée, déclenche un combat.
-     * Si la salle contient un bidon, permet au personnage d'interagir avec lui.
-     * 
-     * @param p Personnage qui tente d'entrer
-     */
-    @Override
-    public void entre(Personnage p) {
-        // Vérifier d'abord si le personnage entrant n'est pas neutralisé
-        if (p.estNeutralise()) {
-            System.out.println("Le personnage est neutralisé et ne peut pas entrer.");
-            return;
-        }
+/**
+ * Gère l'entrée d'un personnage dans la salle.
+ * Si la salle est occupée, déclenche un combat.
+ * Si la salle contient un bidon, permet au personnage d'interagir avec lui.
+ * 
+ * @param p Personnage qui tente d'entrer
+ */
+@Override
+public void entre(Personnage p) {
+    // Vérifier d'abord si le personnage entrant n'est pas neutralisé
+    if (p == null || p.estNeutralise()) {
+        System.out.println("Le personnage est neutralisé et ne peut pas entrer.");
+        return;
+    }
+    
+    // S'il y a déjà un occupant, on gère l'interaction
+    if (occupant != null) {
+        // Sauvegarde de la salle d'origine
+        SalleDedans salleOrigine = p.getSalle();
         
-        // S'il y a déjà un occupant, on gère l'interaction
-        if (estOccupee()) {
-            // Sauvegarde de la salle d'origine
-            SalleDedans salleOrigine = p.getSalle();
-            
-            // Vérifier que l'occupant n'est pas neutralisé
-            if (occupant.estNeutralise()) {
-                // Si l'occupant est neutralisé, on le retire simplement
-                occupant = null;
-                // Le personnage p peut entrer
-                p.migre(this);
-            } else {
-                // Combat entre les personnages
-                Personnage.combat(p, occupant);
-                
-                // Si l'occupant a été neutralisé et que p n'est pas neutralisé
-                if (occupant != null && occupant.estNeutralise() && !p.estNeutralise()) {
-                    occupant = null; // Retire l'occupant neutralisé
-                    p.migre(this); // Le personnage p entre
-                } else if (!p.estNeutralise() && !occupant.estNeutralise()) {
-                    // Combat terminé sans neutralisation, le personnage est rejeté
-                    System.out.println("Combat terminé sans neutralisation. Le personnage reste dans sa salle d'origine.");
-                    // Le personnage p reste dans sa salle d'origine (rien à faire ici)
-                }
-            }
-        } else {
-            // La salle est libre, le personnage peut y entrer
+        // Vérifier que l'occupant n'est pas neutralisé
+        if (occupant.estNeutralise()) {
+            // Si l'occupant est neutralisé, on le retire simplement
+            occupant = null;
+            // Le personnage p peut entrer
             p.migre(this);
+        } else {
+            // Combat entre les personnages
+            Personnage.combat(p, occupant);
             
-            // S'il y a un bidon, le personnage interagit avec lui
-            if (contientBidon()) {
-                p.interagit(bidon);
+            // Si l'occupant a été neutralisé et que p n'est pas neutralisé
+            if (occupant != null && occupant.estNeutralise() && !p.estNeutralise()) {
+                occupant = null; // Retire l'occupant neutralisé
+                p.migre(this); // Le personnage p entre
+            } else if (!p.estNeutralise() && occupant != null && !occupant.estNeutralise()) {
+                // Combat terminé sans neutralisation, le personnage est rejeté
+                System.out.println("Combat terminé sans neutralisation. Le personnage reste dans sa salle d'origine.");
+                // Le personnage p reste dans sa salle d'origine (rien à faire ici)
             }
+        }
+    } else {
+        // La salle est libre, le personnage peut y entrer
+        p.migre(this);
+        
+        // S'il y a un bidon, le personnage interagit avec lui
+        if (contientBidon()) {
+            p.interagit(bidon);
         }
     }
+}
 }

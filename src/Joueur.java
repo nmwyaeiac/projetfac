@@ -44,10 +44,13 @@ public class Joueur extends Personnage {
      */
     @Override
     public void deplacer() {
+        // Ne pas continuer si joueur neutralisé ou si salle est null
+        if (estNeutralise() || salle == null) return;
+        
         // Deux déplacements par tour
         for (int i = 0; i < 2; i++) {
             // Ne pas continuer si joueur neutralisé
-            if (estNeutralise()) return;
+            if (estNeutralise() || salle == null) return;
 
             System.out.println("Déplacement " + (i+1) + "/2 du joueur");
             // Demande la direction à l'utilisateur
@@ -60,6 +63,8 @@ public class Joueur extends Personnage {
                 System.out.println("Déplacement vers " + d);
                 // Entre dans la nouvelle salle
                 nouvelleSalle.entre(this);
+                // Vérifie à nouveau si le joueur a été neutralisé ou si salle est devenue null après le déplacement
+            if (estNeutralise() || salle == null) return;
                 // Affiche le plateau après le déplacement
                 salle.getPlateau().afficherPlateau();
             } else {
